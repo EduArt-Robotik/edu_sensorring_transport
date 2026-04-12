@@ -11,6 +11,7 @@
 #include <vector>
 
 namespace eduart {
+namespace sensorring {
 namespace transport {
 namespace protocol {
 
@@ -79,15 +80,28 @@ constexpr std::uint8_t SYNCHRONIZE           = 0x01;
 constexpr std::uint8_t SET_ORIENTATION       = 0x02;
 constexpr std::uint8_t SET_LED_MODE          = 0x03;
 constexpr std::uint8_t SET_LEDS_INDIVIDUALLY = 0x04;
+
+namespace mode {
+constexpr std::uint8_t BEAT             = 1;  // Heartbeat of IOTShield for synchronizing attached devices
+constexpr std::uint8_t LIGHTS_OFF       = 2;  // Lights off
+constexpr std::uint8_t DIM_LIGHT        = 3;  // Dimmed headlight
+constexpr std::uint8_t HIGH_BEAM        = 4;  // high beam headlight
+constexpr std::uint8_t FLASH_ALL        = 5;  // Flash lights
+constexpr std::uint8_t FLASH_LEFT       = 6;  // Flash lights to the left
+constexpr std::uint8_t FLASH_RIGHT      = 7;  // Flash lights to the right
+constexpr std::uint8_t PULSATION        = 8;  // Pulsation
+constexpr std::uint8_t ROTATION         = 9;  // Rotating light
+constexpr std::uint8_t RUNNING          = 10; // Running light
+constexpr std::uint8_t DISTANCE_MAP     = 11; // 0xb  // Map distance to color
+constexpr std::uint8_t FIXED_COLOR      = 12; // 0xc  // Set LEDs to a fixed color
+constexpr std::uint8_t PULSATION_COLOR  = 13; // 0xd  // Pulsate with a given color
+constexpr std::uint8_t INDIVIDUAL_COLOR = 14; // 0xe  // Set every led individually
+} // namespace mode
 } // namespace ws2812b
 
 /** @} */
 
 } // namespace protocol
-} // namespace transport
-
-namespace sensorring {
-namespace transport {
 
 /**
  * @enum Direction
