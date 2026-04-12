@@ -1,6 +1,7 @@
 #include "sensorring_transport/can/CanCodec.hpp"
 
-using namespace eduart::transport::protocol;
+using namespace eduart::sensorring::transport::protocol;
+
 namespace eduart {
 namespace sensorring {
 namespace transport {
