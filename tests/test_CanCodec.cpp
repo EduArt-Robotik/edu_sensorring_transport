@@ -4,7 +4,7 @@
 
 #include "sensorring_transport/can/CanCodec.hpp"
 #include "sensorring_transport/Protocol.hpp"
-using namespace eduart::transport::protocol;
+using namespace eduart::sensorring::transport::protocol;
 
 using eduart::sensorring::transport::Direction;
 using eduart::sensorring::transport::TransportFrame;
