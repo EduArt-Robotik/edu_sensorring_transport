@@ -37,15 +37,31 @@ void MessageReassembler::processFrame(const TransportFrame& frame) {
       _buffers.erase(it);
     }
 
+    // fragmentCount = width: how many leading data bytes encode the total fragment count (big-endian)
+    std::uint8_t countWidth = frame.fragmentCount;
+    if (countWidth == 0 || countWidth > 3 || frame.data.size() < countWidth) {
+      return; // invalid FIRST frame
+    }
+
+    std::uint32_t totalFragments = 0;
+    for (std::uint8_t i = 0; i < countWidth; ++i) {
+      totalFragments = (totalFragments << 8) | frame.data[i];
+    }
+
+    if (totalFragments < 2) {
+      return; // multi-frame must have at least 2 fragments
+    }
+
     TransferBuffer buf;
     buf.command           = frame.command;
-    buf.expectedFragments = frame.fragmentCount;
+    buf.expectedFragments = totalFragments;
     buf.receivedFragments = 1;
     buf.direction         = frame.direction;
     buf.boardAddress      = frame.boardAddress;
     buf.deviceId          = frame.deviceId;
     buf.lastActivity      = std::chrono::steady_clock::now();
-    buf.data.assign(frame.data.begin(), frame.data.end());
+    // Skip the count-width prefix bytes; buffer only the actual payload data
+    buf.data.assign(frame.data.begin() + countWidth, frame.data.end());
     _buffers.emplace(key, std::move(buf));
     break;
   }

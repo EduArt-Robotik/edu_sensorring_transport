@@ -52,8 +52,8 @@ public:
 private:
   struct TransferBuffer {
     std::uint8_t command;
-    std::uint8_t expectedFragments;
-    std::uint8_t receivedFragments;
+    std::uint32_t expectedFragments;
+    std::uint32_t receivedFragments;
     Direction direction;
     std::uint8_t boardAddress;
     std::uint8_t deviceId;

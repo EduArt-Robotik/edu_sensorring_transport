@@ -78,39 +78,51 @@ TEST_CASE("Reassembly: single frame strips padding", "[Reassembly]") {
 
 TEST_CASE("Reassembly: multi-frame 3 fragments", "[Reassembly]") {
   TestFixture f;
-  auto data1 = makeData(61, 0);
-  auto data2 = makeData(61, 61);
-  auto data3 = makeData(20, 122);
+  // FIRST: countWidth=1, data = [0x03 (totalFragments)] ++ 61 payload bytes
+  auto first_data = std::vector<std::uint8_t>{ 3 }; // total fragment count
+  auto payload1   = makeData(60, 0);                // 60 bytes of actual data (61 - 1 count byte)
+  first_data.insert(first_data.end(), payload1.begin(), payload1.end());
 
-  f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x00, fragment::FIRST, 3, data1);
+  auto data2 = makeData(61, 60);
+  auto data3 = makeData(21, 121);
+
+  f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x00, fragment::FIRST, 1, first_data);
   REQUIRE(f.delivered.empty());
 
   f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x00, fragment::MIDDLE, 0, data2);
   REQUIRE(f.delivered.empty());
 
-  f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x00, fragment::LAST, 20, data3);
+  f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x00, fragment::LAST, 21, data3);
   REQUIRE(f.delivered.size() == 1);
   REQUIRE(f.delivered[0].command == 0x00);
-  REQUIRE(f.delivered[0].data.size() == 61 + 61 + 20);
-  REQUIRE(f.delivered[0].data == makeData(61 + 61 + 20, 0));
+  REQUIRE(f.delivered[0].data.size() == 60 + 61 + 21);
+  REQUIRE(f.delivered[0].data == makeData(60 + 61 + 21, 0));
 }
 
 TEST_CASE("Reassembly: last frame strips padding", "[Reassembly]") {
   TestFixture f;
-  auto data1 = makeData(61, 0);
-  auto data2 = makeData(9, 61);
-  data2.resize(13, 0x00);
+  // FIRST: countWidth=1, data = [0x02] ++ 60 payload bytes
+  auto first_data = std::vector<std::uint8_t>{ 2 };
+  auto payload1   = makeData(60, 0);
+  first_data.insert(first_data.end(), payload1.begin(), payload1.end());
 
-  f.process(Direction::Input, 3, devbyte::HTPA32, 0x05, fragment::FIRST, 2, data1);
-  f.process(Direction::Input, 3, devbyte::HTPA32, 0x05, fragment::LAST, 9, data2);
+  auto data2 = makeData(10, 60);
+  data2.resize(13, 0x00); // CAN FD padding
+
+  f.process(Direction::Input, 3, devbyte::HTPA32, 0x05, fragment::FIRST, 1, first_data);
+  f.process(Direction::Input, 3, devbyte::HTPA32, 0x05, fragment::LAST, 10, data2);
 
   REQUIRE(f.delivered.size() == 1);
-  REQUIRE(f.delivered[0].data.size() == 61 + 9);
+  REQUIRE(f.delivered[0].data.size() == 60 + 10);
 }
 
 TEST_CASE("Reassembly: command mismatch discards transfer", "[Reassembly]") {
   TestFixture f;
-  f.process(Direction::Input, 4, devbyte::VL53L8CX, 0x00, fragment::FIRST, 2, makeData(61));
+  auto first_data = std::vector<std::uint8_t>{ 2 };
+  auto p          = makeData(60);
+  first_data.insert(first_data.end(), p.begin(), p.end());
+
+  f.process(Direction::Input, 4, devbyte::VL53L8CX, 0x00, fragment::FIRST, 1, first_data);
   f.process(
       Direction::Input, 4, devbyte::VL53L8CX, 0x01, // wrong!
       fragment::LAST, 10, makeData(10));
@@ -120,18 +132,31 @@ TEST_CASE("Reassembly: command mismatch discards transfer", "[Reassembly]") {
 
 TEST_CASE("Reassembly: restart on new first-fragment", "[Reassembly]") {
   TestFixture f;
-  f.process(Direction::Input, 5, devbyte::VL53L8CX, 0x00, fragment::FIRST, 3, makeData(61));
-  f.process(Direction::Input, 5, devbyte::VL53L8CX, 0x01, fragment::FIRST, 2, makeData(61, 100));
-  f.process(Direction::Input, 5, devbyte::VL53L8CX, 0x01, fragment::LAST, 10, makeData(10, 161));
+  // First incomplete transfer
+  auto first1 = std::vector<std::uint8_t>{ 3 };
+  auto p1     = makeData(60);
+  first1.insert(first1.end(), p1.begin(), p1.end());
+  f.process(Direction::Input, 5, devbyte::VL53L8CX, 0x00, fragment::FIRST, 1, first1);
+
+  // Second transfer replaces the first
+  auto first2 = std::vector<std::uint8_t>{ 2 };
+  auto p2     = makeData(60, 100);
+  first2.insert(first2.end(), p2.begin(), p2.end());
+  f.process(Direction::Input, 5, devbyte::VL53L8CX, 0x01, fragment::FIRST, 1, first2);
+  f.process(Direction::Input, 5, devbyte::VL53L8CX, 0x01, fragment::LAST, 10, makeData(10, 160));
 
   REQUIRE(f.delivered.size() == 1);
   REQUIRE(f.delivered[0].command == 0x01);
-  REQUIRE(f.delivered[0].data.size() == 61 + 10);
+  REQUIRE(f.delivered[0].data.size() == 60 + 10);
 }
 
 TEST_CASE("Reassembly: overrun discards transfer", "[Reassembly]") {
   TestFixture f;
-  f.process(Direction::Input, 6, devbyte::VL53L8CX, 0x00, fragment::FIRST, 2, makeData(61));
+  auto first = std::vector<std::uint8_t>{ 2 };
+  auto p     = makeData(60);
+  first.insert(first.end(), p.begin(), p.end());
+
+  f.process(Direction::Input, 6, devbyte::VL53L8CX, 0x00, fragment::FIRST, 1, first);
   f.process(Direction::Input, 6, devbyte::VL53L8CX, 0x00, fragment::MIDDLE, 0, makeData(61));
   f.process(Direction::Input, 6, devbyte::VL53L8CX, 0x00, fragment::MIDDLE, 0, makeData(61)); // overrun
 
@@ -149,35 +174,53 @@ TEST_CASE("Reassembly: stray middle/last fragments ignored", "[Reassembly]") {
 TEST_CASE("Reassembly: buffer isolation between board/device pairs", "[Reassembly]") {
   TestFixture f;
 
-  // Start three concurrent transfers
-  f.process(Direction::Input, 1, devbyte::VL53L8CX, 0x00, fragment::FIRST, 2, makeData(61, 0));
-  f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x01, fragment::FIRST, 2, makeData(61, 10));
-  f.process(Direction::Input, 1, devbyte::HTPA32, 0x02, fragment::FIRST, 2, makeData(61, 20));
+  // Helper to build FIRST frame data: [count] ++ payload
+  auto mkFirst = [](std::uint8_t totalFragments, std::size_t payloadLen, std::uint8_t start) {
+    std::vector<std::uint8_t> d = { totalFragments };
+    auto p                      = makeData(payloadLen, start);
+    d.insert(d.end(), p.begin(), p.end());
+    return d;
+  };
+
+  // Start three concurrent transfers (each 2 fragments, 60 payload in FIRST)
+  f.process(Direction::Input, 1, devbyte::VL53L8CX, 0x00, fragment::FIRST, 1, mkFirst(2, 60, 0));
+  f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x01, fragment::FIRST, 1, mkFirst(2, 60, 10));
+  f.process(Direction::Input, 1, devbyte::HTPA32, 0x02, fragment::FIRST, 1, mkFirst(2, 60, 20));
 
   // Complete them in different order
-  f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x01, fragment::LAST, 5, makeData(5, 71));
-  f.process(Direction::Input, 1, devbyte::HTPA32, 0x02, fragment::LAST, 8, makeData(8, 81));
-  f.process(Direction::Input, 1, devbyte::VL53L8CX, 0x00, fragment::LAST, 3, makeData(3, 61));
+  f.process(Direction::Input, 2, devbyte::VL53L8CX, 0x01, fragment::LAST, 5, makeData(5, 70));
+  f.process(Direction::Input, 1, devbyte::HTPA32, 0x02, fragment::LAST, 8, makeData(8, 80));
+  f.process(Direction::Input, 1, devbyte::VL53L8CX, 0x00, fragment::LAST, 3, makeData(3, 60));
 
   REQUIRE(f.delivered.size() == 3);
 
   REQUIRE(f.delivered[0].boardAddress == 2);
   REQUIRE(f.delivered[0].command == 0x01);
-  REQUIRE(f.delivered[0].data.size() == 66);
+  REQUIRE(f.delivered[0].data.size() == 65); // 60 + 5
 
   REQUIRE(f.delivered[1].boardAddress == 1);
   REQUIRE(f.delivered[1].deviceId == devbyte::HTPA32);
-  REQUIRE(f.delivered[1].data.size() == 69);
+  REQUIRE(f.delivered[1].data.size() == 68); // 60 + 8
 
   REQUIRE(f.delivered[2].boardAddress == 1);
   REQUIRE(f.delivered[2].deviceId == devbyte::VL53L8CX);
-  REQUIRE(f.delivered[2].data.size() == 64);
+  REQUIRE(f.delivered[2].data.size() == 63); // 60 + 3
 }
 
 TEST_CASE("Reassembly: fragment count mismatch on last", "[Reassembly]") {
   TestFixture f;
-  f.process(Direction::Input, 8, devbyte::VL53L8CX, 0x00, fragment::FIRST, 3, makeData(61));
+  auto first = std::vector<std::uint8_t>{ 3 }; // expects 3 total fragments
+  auto p     = makeData(60);
+  first.insert(first.end(), p.begin(), p.end());
+
+  f.process(Direction::Input, 8, devbyte::VL53L8CX, 0x00, fragment::FIRST, 1, first);
   f.process(Direction::Input, 8, devbyte::VL53L8CX, 0x00, fragment::LAST, 10, makeData(10)); // only fragment 2, expected 3
 
+  REQUIRE(f.delivered.empty());
+}
+
+TEST_CASE("Reassembly: invalid FIRST with countWidth=0 is ignored", "[Reassembly]") {
+  TestFixture f;
+  f.process(Direction::Input, 1, devbyte::BOARD, 0x01, fragment::FIRST, 0, makeData(61));
   REQUIRE(f.delivered.empty());
 }

@@ -56,7 +56,7 @@ target_link_libraries(your_target PRIVATE sensorring_transport::sensorring_trans
 
 using namespace sensorring::transport;
 using namespace sensorring::transport::can;
-using namespace eduart::transport::protocol;
+using namespace eduart::sensorring::transport::protocol;
 
 // Assemble a message into CAN FD frames
 MessageAssembler assembler(CanCodec::MAX_PAYLOAD_PER_FRAME);

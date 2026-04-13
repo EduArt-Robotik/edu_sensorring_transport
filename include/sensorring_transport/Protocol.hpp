@@ -105,11 +105,12 @@ constexpr std::uint8_t INDIVIDUAL_COLOR = 14; // 0xe  // Set every led individua
 
 /**
  * @enum Direction
- * @brief Communication direction.
+ * @brief Communication direction from the board's perspective.
  */
 enum class Direction : std::uint8_t {
-  Input  = 0, ///< Board -> host
-  Output = 1  ///< Host -> board
+  Input     = 0, ///< Host -> board (board receives)
+  Broadcast = 0, ///< Alias for Input; used with broadcast board address
+  Output    = 1  ///< Board -> host (board sends)
 };
 
 /**
@@ -126,7 +127,7 @@ struct TransportFrame {
   std::uint8_t deviceId;          ///< Device byte (devbyte::*)
   std::uint8_t command;           ///< Command byte
   std::uint8_t fragmentType;      ///< Fragment type (fragment::*)
-  std::uint8_t fragmentCount;     ///< Bits 5-0: data length (single/last) or total fragments (first)
+  std::uint8_t fragmentCount;     ///< Bits 5-0: data length (single/last), or count-width in bytes (first)
   std::vector<std::uint8_t> data; ///< Payload data bytes
 
   /// Broadcast address constant.
