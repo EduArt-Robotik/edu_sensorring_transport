@@ -54,8 +54,10 @@ namespace sensor_board {
 constexpr std::uint8_t ACTIVE_DEVICE_REQUEST  = 0x01;
 constexpr std::uint8_t ACTIVE_DEVICE_RESPONSE = 0x02;
 constexpr std::uint8_t RESET                  = 0x03;
-constexpr std::uint8_t ENTER_BOOTLOADER       = 0x04;
-constexpr std::uint8_t ENTER_BOOTLOADER_ACK   = 0x05;
+constexpr std::uint8_t BOOTLOADER_START       = 0x04;
+constexpr std::uint8_t BOOTLOADER_START_ACK   = 0x05;
+constexpr std::uint8_t BOOTLOADER_REQUEST     = 0x06;
+constexpr std::uint8_t BOOTLOADER_RESPONSE    = 0x07;
 } // namespace sensor_board
 
 /// VL53L8CX commands
