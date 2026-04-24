@@ -29,6 +29,15 @@ std::vector<TransportFrame> MessageAssembler::assemble(Direction direction, std:
     return frames;
   }
 
+#ifdef SENSORRING_TRANSPORT_NO_MULTIFRAME
+  // Multi-frame support is compiled out. Oversized payloads are a programming
+  // error on this build; signal failure to the caller by returning no frames.
+  (void)direction;
+  (void)boardAddress;
+  (void)deviceId;
+  (void)command;
+  return frames;
+#else
   // Multi-frame: calculate total fragments needed.
   // The FIRST frame's data starts with the total-fragment-count encoded in
   // the minimum number of bytes (big-endian).  The 6-bit fragmentCount field
@@ -114,6 +123,7 @@ std::vector<TransportFrame> MessageAssembler::assemble(Direction direction, std:
   }
 
   return frames;
+#endif // SENSORRING_TRANSPORT_NO_MULTIFRAME
 }
 
 } // namespace transport

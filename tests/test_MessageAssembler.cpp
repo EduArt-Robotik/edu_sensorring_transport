@@ -58,6 +58,8 @@ TEST_CASE("Assembly: exactly max payload fits single frame", "[Assembly]") {
   REQUIRE(frames[0].data == data);
 }
 
+#ifndef SENSORRING_TRANSPORT_NO_MULTIFRAME
+
 TEST_CASE("Assembly: max+1 produces two fragments", "[Assembly]") {
   MessageAssembler asm_(61);
   auto data   = makeData(62);
@@ -187,3 +189,15 @@ TEST_CASE("Assembly: >255 fragments uses 2-byte count width", "[Assembly]") {
   REQUIRE(totalFromData == frames.size());
   REQUIRE(frames[0].data.size() == 61);
 }
+
+#else // SENSORRING_TRANSPORT_NO_MULTIFRAME
+
+TEST_CASE("Assembly: oversized payload returns no frames in single-frame-only build", "[Assembly]") {
+  MessageAssembler asm_(61);
+  auto data   = makeData(62);
+  auto frames = asm_.assemble(Direction::Output, 0x01, devbyte::VL53L8CX, 0x04, data);
+
+  REQUIRE(frames.empty());
+}
+
+#endif // SENSORRING_TRANSPORT_NO_MULTIFRAME

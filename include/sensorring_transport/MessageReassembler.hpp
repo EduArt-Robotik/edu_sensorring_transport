@@ -1,9 +1,13 @@
 /**
  * @file   MessageReassembler.hpp
  * @brief  MessageReassembler: reassembles TransportFrames into complete messages.
+ *
+ * Compiled out entirely when SENSORRING_TRANSPORT_NO_MULTIFRAME is defined
  */
 
 #pragma once
+
+#ifndef SENSORRING_TRANSPORT_NO_MULTIFRAME
 
 #include <chrono>
 #include <cstdint>
@@ -81,3 +85,5 @@ private:
 } // namespace transport
 } // namespace sensorring
 } // namespace eduart
+
+#endif // SENSORRING_TRANSPORT_NO_MULTIFRAME
