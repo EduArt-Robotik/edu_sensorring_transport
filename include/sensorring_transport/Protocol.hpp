@@ -26,6 +26,7 @@ constexpr std::uint8_t BOARD    = 0x00;
 constexpr std::uint8_t VL53L8CX = 0x01;
 constexpr std::uint8_t HTPA32   = 0x02;
 constexpr std::uint8_t WS2812B  = 0x03;
+constexpr std::uint8_t TMF8829  = 0x04;
 } // namespace devbyte
 
 /// Fragment type encoding (bits 7-6 of fragment byte)
@@ -103,6 +104,14 @@ constexpr std::uint8_t INDIVIDUAL_COLOR = 14; // 0xe  // Set every led individua
 } // namespace mode
 } // namespace ws2812b
 
+/// TMF8829 commands
+namespace tmf8829 {
+constexpr std::uint8_t MEASUREMENT_REQUEST               = 0x01;
+constexpr std::uint8_t MEASUREMENT_RESPONSE              = 0x02;
+constexpr std::uint8_t MEASUREMENT_TRANSMISSION_REQUEST  = 0x03;
+constexpr std::uint8_t MEASUREMENT_TRANSMISSION_RESPONSE = 0x04;
+constexpr std::uint8_t PARAMETER_SET_RESOLUTION          = 0x20;
+} // namespace tmf8829
 /** @} */
 
 } // namespace protocol
