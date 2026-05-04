@@ -12,6 +12,16 @@ MessageAssembler::MessageAssembler(std::uint16_t maxPayloadPerFrame)
     : _maxPayloadPerFrame(maxPayloadPerFrame) {
 }
 
+std::vector<TransportFrame> MessageAssembler::assemble(Direction direction, std::uint8_t boardAddress, std::uint8_t deviceId, std::uint8_t command, const std::uint8_t* data, size_t size) const {
+  if (data == nullptr || size == 0) {
+    const std::vector<std::uint8_t> empty;
+    return assemble(direction, boardAddress, deviceId, command, empty);
+  }
+
+  std::vector<std::uint8_t> tmp(data, data + size);
+  return assemble(direction, boardAddress, deviceId, command, tmp);
+}
+
 std::vector<TransportFrame> MessageAssembler::assemble(Direction direction, std::uint8_t boardAddress, std::uint8_t deviceId, std::uint8_t command, const std::vector<std::uint8_t>& data) const {
   std::vector<TransportFrame> frames;
 
