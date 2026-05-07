@@ -50,6 +50,9 @@ constexpr std::uint8_t HEADER_SIZE = 3;
  * @{
  */
 
+/// General
+constexpr std::uint8_t PARAMETER_GETTER_BYTE = 0x80;
+
 /// Sensor board commands
 namespace sensor_board {
 constexpr std::uint8_t ACTIVE_DEVICE_REQUEST  = 0x01;
@@ -117,6 +120,17 @@ constexpr std::uint8_t PARAMETER_RESULT_SET_XTALK           = 0x21;
 constexpr std::uint8_t PARAMETER_RESULT_SET_NOISE_STRENGTH  = 0x22;
 constexpr std::uint8_t PARAMETER_RESULT_SET_SIGNAL_STRENGTH = 0x23;
 constexpr std::uint8_t PARAMETER_RESULT_SET_NR_PEAKS        = 0x24;
+
+constexpr std::uint8_t PARAMETER_CONFIG_GET_RESOLUTION      = PARAMETER_CONFIG_SET_RESOLUTION | PARAMETER_GETTER_BYTE;
+constexpr std::uint8_t PARAMETER_RESULT_GET_FULL_NOISE      = PARAMETER_RESULT_SET_FULL_NOISE | PARAMETER_GETTER_BYTE;
+constexpr std::uint8_t PARAMETER_RESULT_GET_XTALK           = PARAMETER_RESULT_SET_XTALK | PARAMETER_GETTER_BYTE;
+constexpr std::uint8_t PARAMETER_RESULT_GET_NOISE_STRENGTH  = PARAMETER_RESULT_SET_NOISE_STRENGTH | PARAMETER_GETTER_BYTE;
+constexpr std::uint8_t PARAMETER_RESULT_GET_SIGNAL_STRENGTH = PARAMETER_RESULT_SET_SIGNAL_STRENGTH | PARAMETER_GETTER_BYTE;
+constexpr std::uint8_t PARAMETER_RESULT_GET_NR_PEAKS        = PARAMETER_RESULT_SET_NR_PEAKS | PARAMETER_GETTER_BYTE;
+
+constexpr std::uint8_t RESULT_FRAME_PRE_HEADER_SIZE = 5;
+constexpr std::uint8_t RESULT_FRAME_HEADER_SIZE = 16;
+constexpr std::uint8_t RESULT_FRAME_FOOTER_SIZE = 12;
 
 // TMF8829 resolution settings
 namespace resolution {
