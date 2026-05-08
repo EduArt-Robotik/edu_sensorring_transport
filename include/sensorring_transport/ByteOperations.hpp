@@ -64,27 +64,6 @@ public:
   }
 
   /**
-   * @brief Read a little-endian unsigned integer stored in @p byteCount bytes (1–4) from the buffer.
-   * @param buffer     Source byte buffer.
-   * @param offset     Byte offset to read from.
-   * @param byteCount  Number of bytes the value occupies (must be 1–4).
-   * @return The uint32_t value decoded from @p offset (little-endian, zero-extended).
-   * @throws std::out_of_range    if the buffer is too small.
-   * @throws std::invalid_argument if @p byteCount is 0 or greater than 4.
-   */
-  static uint32_t readUint32(const std::vector<uint8_t>& buffer, size_t offset, size_t byteCount) {
-    if (byteCount == 0 || byteCount > 4) {
-      throw std::invalid_argument("ByteOperations: byteCount must be 1..4");
-    }
-    throwIfOutOfRange(buffer, offset, byteCount);
-    uint32_t result = 0;
-    for (size_t i = 0; i < byteCount; ++i) {
-      result |= static_cast<uint32_t>(buffer[offset + i]) << (i * 8);
-    }
-    return result;
-  }
-
-  /**
    * @brief Read a little-endian int16_t from the buffer.
    * @param buffer  Source byte buffer.
    * @param offset  Byte offset to read from.
@@ -176,25 +155,6 @@ public:
     buffer[offset + 1] = static_cast<uint8_t>(value >> 8);
     buffer[offset + 2] = static_cast<uint8_t>(value >> 16);
     buffer[offset + 3] = static_cast<uint8_t>(value >> 24);
-  }
-
-  /**
-   * @brief Write the lower @p byteCount bytes (1–4) of a uint32_t into the buffer in little-endian byte order.
-   * @param buffer     Destination byte buffer.
-   * @param offset     Byte offset to write to.
-   * @param value      The uint32_t value to store (only the lower @p byteCount bytes are written).
-   * @param byteCount  Number of bytes to write (must be 1–4).
-   * @throws std::out_of_range     if the buffer is too small.
-   * @throws std::invalid_argument if @p byteCount is 0 or greater than 4.
-   */
-  static void writeUint32(std::vector<uint8_t>& buffer, size_t offset, uint32_t value, size_t byteCount) {
-    if (byteCount == 0 || byteCount > 4) {
-      throw std::invalid_argument("ByteOperations: byteCount must be 1..4");
-    }
-    throwIfOutOfRange(buffer, offset, byteCount);
-    for (size_t i = 0; i < byteCount; ++i) {
-      buffer[offset + i] = static_cast<uint8_t>(value >> (i * 8));
-    }
   }
 
   /**
