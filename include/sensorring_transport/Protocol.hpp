@@ -128,9 +128,14 @@ constexpr std::uint8_t PARAMETER_RESULT_GET_NOISE_STRENGTH  = PARAMETER_RESULT_S
 constexpr std::uint8_t PARAMETER_RESULT_GET_SIGNAL_STRENGTH = PARAMETER_RESULT_SET_SIGNAL_STRENGTH | PARAMETER_GETTER_BYTE;
 constexpr std::uint8_t PARAMETER_RESULT_GET_NR_PEAKS        = PARAMETER_RESULT_SET_NR_PEAKS | PARAMETER_GETTER_BYTE;
 
-constexpr std::uint8_t RESULT_FRAME_PRE_HEADER_SIZE = 5;
-constexpr std::uint8_t RESULT_FRAME_HEADER_SIZE = 16;
-constexpr std::uint8_t RESULT_FRAME_FOOTER_SIZE = 12;
+// TMF8829 result frame structure constants
+constexpr std::uint8_t RESULT_FRAME_PRE_HEADER_SIZE = 5u;
+constexpr std::uint8_t RESULT_FRAME_HEADER_SIZE     = 16u;
+constexpr std::uint8_t RESULT_FRAME_FOOTER_SIZE     = 12u;
+
+constexpr std::uint16_t RESULT_FRAME_EOF_MARKER    = 0xE0F7; // End-of-frame marker
+constexpr std::uint8_t RESULT_FRAME_PAYLOAD_OFFSET = 4u;     // Offset to add to the payload field of the header to get the actual length including header, point data and footer
+constexpr double DISTANCE_FIXED_POINT_FACTOR       = 0.25l;  // Each unit in the raw distance corresponds to 0.25 mm
 
 // TMF8829 resolution settings
 namespace resolution {
