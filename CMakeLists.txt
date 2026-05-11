@@ -18,6 +18,7 @@ option(SENSORRING_TRANSPORT_NO_MULTIFRAME
 
 # Library target
 set(sensorring_transport_sources
+  src/ByteOperations.cpp
   src/MessageAssembler.cpp
   src/can/CanCodec.cpp
 )
