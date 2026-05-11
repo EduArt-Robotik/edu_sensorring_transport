@@ -90,22 +90,22 @@ constexpr std::uint8_t SET_LED_MODE          = 0x03;
 constexpr std::uint8_t SET_LEDS_INDIVIDUALLY = 0x04;
 
 // WS2812B modes
-enum class mode : std::uint8_t {
-  BEAT             = 1,  // Heartbeat of IOTShield for synchronizing attached devices
-  LIGHTS_OFF       = 2,  // Lights off
-  DIM_LIGHT        = 3,  // Dimmed headlight
-  HIGH_BEAM        = 4,  // high beam headlight
-  FLASH_ALL        = 5,  // Flash lights
-  FLASH_LEFT       = 6,  // Flash lights to the left
-  FLASH_RIGHT      = 7,  // Flash lights to the right
-  PULSATION        = 8,  // Pulsation
-  ROTATION         = 9,  // Rotating light
-  RUNNING          = 10, // Running light
-  DISTANCE_MAP     = 11, // 0xb  // Map distance to color
-  FIXED_COLOR      = 12, // 0xc  // Set LEDs to a fixed color
-  PULSATION_COLOR  = 13, // 0xd  // Pulsate with a given color
-  INDIVIDUAL_COLOR = 14  // 0xe  // Set every led individually
-};
+namespace mode {
+constexpr std::uint8_t BEAT             = 1;  // Heartbeat of IOTShield for synchronizing attached devices
+constexpr std::uint8_t LIGHTS_OFF       = 2;  // Lights off
+constexpr std::uint8_t DIM_LIGHT        = 3;  // Dimmed headlight
+constexpr std::uint8_t HIGH_BEAM        = 4;  // high beam headlight
+constexpr std::uint8_t FLASH_ALL        = 5;  // Flash lights
+constexpr std::uint8_t FLASH_LEFT       = 6;  // Flash lights to the left
+constexpr std::uint8_t FLASH_RIGHT      = 7;  // Flash lights to the right
+constexpr std::uint8_t PULSATION        = 8;  // Pulsation
+constexpr std::uint8_t ROTATION         = 9;  // Rotating light
+constexpr std::uint8_t RUNNING          = 10; // Running light
+constexpr std::uint8_t DISTANCE_MAP     = 11; // 0xb  // Map distance to color
+constexpr std::uint8_t FIXED_COLOR      = 12; // 0xc  // Set LEDs to a fixed color
+constexpr std::uint8_t PULSATION_COLOR  = 13; // 0xd  // Pulsate with a given color
+constexpr std::uint8_t INDIVIDUAL_COLOR = 14; // 0xe  // Set every led individually
+} // namespace mode
 } // namespace ws2812b
 
 /// TMF8829 commands
@@ -129,17 +129,17 @@ constexpr std::uint8_t PARAMETER_RESULT_GET_SIGNAL_STRENGTH = PARAMETER_RESULT_S
 constexpr std::uint8_t PARAMETER_RESULT_GET_NR_PEAKS        = PARAMETER_RESULT_SET_NR_PEAKS | PARAMETER_GETTER_BYTE;
 
 // TMF8829 resolution settings
-enum class resolution : std::uint8_t {
-  RES_8X8                 = 0,
-  RES_8X8_LONG_RANGE      = 1,
-  RES_8X8_HIGH_ACCURACY   = 2,
-  RES_16X16               = 3,
-  RES_16X16_HIGH_ACCURACY = 4,
-  RES_32X32               = 5,
-  RES_32X32_HIGH_ACCURACY = 6,
-  RES_48X32               = 7,
-  RES_48X32_HIGH_ACCURACY = 8
-};
+namespace resolution {
+constexpr std::uint8_t RES_8X8                 = 0;
+constexpr std::uint8_t RES_8X8_LONG_RANGE      = 1;
+constexpr std::uint8_t RES_8X8_HIGH_ACCURACY   = 2;
+constexpr std::uint8_t RES_16X16               = 3;
+constexpr std::uint8_t RES_16X16_HIGH_ACCURACY = 4;
+constexpr std::uint8_t RES_32X32               = 5;
+constexpr std::uint8_t RES_32X32_HIGH_ACCURACY = 6;
+constexpr std::uint8_t RES_48X32               = 7;
+constexpr std::uint8_t RES_48X32_HIGH_ACCURACY = 8;
+} // namespace resolution
 } // namespace tmf8829
 /** @} */
 
