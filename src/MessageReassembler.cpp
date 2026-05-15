@@ -108,6 +108,7 @@ void MessageReassembler::processFrame(const TransportFrame& frame) {
     // count = valid data bytes in last frame; trim padding
     std::size_t validLen = std::min(static_cast<std::size_t>(frame.fragmentCount), frame.data.size());
     buf.data.insert(buf.data.end(), frame.data.begin(), frame.data.begin() + validLen);
+    buf.data.shrink_to_fit();
 
     TransportFrame delivered;
     delivered.direction     = buf.direction;

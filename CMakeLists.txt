@@ -65,6 +65,7 @@ if(SENSORRING_TRANSPORT_BUILD_TESTS)
     tests/test_MessageAssembler.cpp
     tests/test_CanCodec.cpp
     tests/test_CanFdDlc.cpp
+    tests/test_ByteOperations.cpp
   )
 
   if(NOT SENSORRING_TRANSPORT_NO_MULTIFRAME)
