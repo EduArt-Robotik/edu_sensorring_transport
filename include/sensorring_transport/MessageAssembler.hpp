@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <stddef.h>
 #include <vector>
 
 #include "sensorring_transport/Protocol.hpp"
@@ -39,6 +40,19 @@ public:
    * @return Vector of TransportFrames ready for transport encoding.
    */
   std::vector<TransportFrame> assemble(Direction direction, std::uint8_t boardAddress, std::uint8_t deviceId, std::uint8_t command, const std::vector<std::uint8_t>& data) const;
+
+  /**
+   * @brief Fragment a message from a raw buffer into one or more TransportFrames.
+   *
+   * @param direction    Communication direction.
+   * @param boardAddress Target board address.
+   * @param deviceId     Device byte.
+   * @param command      Command byte.
+   * @param data         Pointer to message payload to fragment.
+   * @param size         Size of payload in bytes.
+   * @return Vector of TransportFrames ready for transport encoding.
+   */
+  std::vector<TransportFrame> assemble(Direction direction, std::uint8_t boardAddress, std::uint8_t deviceId, std::uint8_t command, const std::uint8_t* data, size_t size) const;
 
 private:
   std::uint16_t _maxPayloadPerFrame;
