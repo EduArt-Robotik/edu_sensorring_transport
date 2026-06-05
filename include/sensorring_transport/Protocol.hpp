@@ -90,21 +90,21 @@ constexpr std::uint8_t SET_LED_MODE          = 0x03;
 constexpr std::uint8_t SET_LEDS_INDIVIDUALLY = 0x04;
 
 // WS2812B modes
-enum class mode : std::uint8_t {
-  BEAT             = 1,  // Heartbeat of IOTShield for synchronizing attached devices
-  LIGHTS_OFF       = 2,  // Lights off
-  DIM_LIGHT        = 3,  // Dimmed headlight
-  HIGH_BEAM        = 4,  // high beam headlight
-  FLASH_ALL        = 5,  // Flash lights
-  FLASH_LEFT       = 6,  // Flash lights to the left
-  FLASH_RIGHT      = 7,  // Flash lights to the right
-  PULSATION        = 8,  // Pulsation
-  ROTATION         = 9,  // Rotating light
-  RUNNING          = 10, // Running light
-  DISTANCE_MAP     = 11, // 0xb  // Map distance to color
-  FIXED_COLOR      = 12, // 0xc  // Set LEDs to a fixed color
-  PULSATION_COLOR  = 13, // 0xd  // Pulsate with a given color
-  INDIVIDUAL_COLOR = 14  // 0xe  // Set every led individually
+enum class Mode : std::uint8_t {
+  Beat            = 1,  // Heartbeat of IOTShield for synchronizing attached devices
+  LightsOff       = 2,  // Lights off
+  DimLight        = 3,  // Dimmed headlight
+  HighBeam        = 4,  // high beam headlight
+  FlashAll        = 5,  // Flash lights
+  FlashLeft       = 6,  // Flash lights to the left
+  FlashRight      = 7,  // Flash lights to the right
+  Pulsation       = 8,  // Pulsation
+  Rotation        = 9,  // Rotating light
+  Running         = 10, // Running light
+  DistanceMap     = 11, // 0xb  // Map distance to color
+  FixedColor      = 12, // 0xc  // Set LEDs to a fixed color
+  PulsationColor  = 13, // 0xd  // Pulsate with a given color
+  IndividualColor = 14  // 0xe  // Set every led individually
 };
 } // namespace ws2812b
 
@@ -129,16 +129,16 @@ constexpr std::uint8_t PARAMETER_RESULT_GET_SIGNAL_STRENGTH = PARAMETER_RESULT_S
 constexpr std::uint8_t PARAMETER_RESULT_GET_NR_PEAKS        = PARAMETER_RESULT_SET_NR_PEAKS | PARAMETER_GETTER_BYTE;
 
 // TMF8829 resolution settings
-enum class resolution : std::uint8_t {
-  RES_8X8                 = 0,
-  RES_8X8_LONG_RANGE      = 1,
-  RES_8X8_HIGH_ACCURACY   = 2,
-  RES_16X16               = 3,
-  RES_16X16_HIGH_ACCURACY = 4,
-  RES_32X32               = 5,
-  RES_32X32_HIGH_ACCURACY = 6,
-  RES_48X32               = 7,
-  RES_48X32_HIGH_ACCURACY = 8
+enum class Resolution : std::uint8_t {
+  Res8x8               = 0,
+  Res8x8LongRange      = 1,
+  Res8x8HighAccuracy   = 2,
+  Res16x16             = 3,
+  Res16x16HighAccuracy = 4,
+  Res32x32             = 5,
+  Res32x32HighAccuracy = 6,
+  Res48x32             = 7,
+  Res48x32HighAccuracy = 8
 };
 } // namespace tmf8829
 /** @} */
