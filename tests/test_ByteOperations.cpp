@@ -8,6 +8,10 @@
 
 using ByteOps = eduart::sensorring::transport::ByteOperations;
 
+// All tests use the std::vector<uint8_t> overloads. Those overloads delegate
+// directly to the raw-buffer (uint8_t*, size_t length) implementations, so the
+// tests below indirectly cover the raw-buffer code paths as well.
+
 // ── uint8 ────────────────────────────────────────────────────────────────────
 
 TEST_CASE("BufferOps: write/read uint8", "[BufferOps]") {
