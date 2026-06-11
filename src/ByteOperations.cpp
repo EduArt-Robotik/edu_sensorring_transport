@@ -174,6 +174,42 @@ void ByteOperations::writeDouble(std::vector<uint8_t>& buffer, size_t offset, do
   writeDouble(buffer.data(), buffer.size(), offset, value);
 }
 
+std::vector<uint8_t> ByteOperations::toBytes(uint16_t value) {
+  std::vector<uint8_t> buffer(sizeof(uint16_t));
+  writeUint16(buffer, 0, value);
+  return buffer;
+}
+
+std::vector<uint8_t> ByteOperations::toBytes(uint32_t value) {
+  std::vector<uint8_t> buffer(sizeof(uint32_t));
+  writeUint32(buffer, 0, value);
+  return buffer;
+}
+
+std::vector<uint8_t> ByteOperations::toBytes(int16_t value) {
+  std::vector<uint8_t> buffer(sizeof(int16_t));
+  writeInt16(buffer, 0, value);
+  return buffer;
+}
+
+std::vector<uint8_t> ByteOperations::toBytes(int32_t value) {
+  std::vector<uint8_t> buffer(sizeof(int32_t));
+  writeInt32(buffer, 0, value);
+  return buffer;
+}
+
+std::vector<uint8_t> ByteOperations::toBytes(float value) {
+  std::vector<uint8_t> buffer(sizeof(float));
+  writeFloat(buffer, 0, value);
+  return buffer;
+}
+
+std::vector<uint8_t> ByteOperations::toBytes(double value) {
+  std::vector<uint8_t> buffer(sizeof(double));
+  writeDouble(buffer, 0, value);
+  return buffer;
+}
+
 } // namespace transport
 } // namespace sensorring
 } // namespace eduart

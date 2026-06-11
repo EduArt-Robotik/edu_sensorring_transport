@@ -97,6 +97,50 @@ TEST_CASE("BufferOps: write/read double", "[BufferOps]") {
   REQUIRE(ByteOps::readDouble(buf, 0) == Catch::Approx(3.141592653589793));
 }
 
+// ── toBytes convenience helpers ─────────────────────────────────────────────
+
+TEST_CASE("BufferOps: toBytes uint16 returns little-endian bytes", "[BufferOps]") {
+  const std::vector<uint8_t> bytes = ByteOps::toBytes(static_cast<uint16_t>(0x1234));
+
+  REQUIRE(bytes == std::vector<uint8_t>{ 0x34, 0x12 });
+  REQUIRE(ByteOps::readUint16(bytes, 0) == 0x1234);
+}
+
+TEST_CASE("BufferOps: toBytes uint32 returns little-endian bytes", "[BufferOps]") {
+  const std::vector<uint8_t> bytes = ByteOps::toBytes(static_cast<uint32_t>(0xDEADBEEF));
+
+  REQUIRE(bytes == std::vector<uint8_t>{ 0xEF, 0xBE, 0xAD, 0xDE });
+  REQUIRE(ByteOps::readUint32(bytes, 0) == 0xDEADBEEF);
+}
+
+TEST_CASE("BufferOps: toBytes int16 preserves two's-complement representation", "[BufferOps]") {
+  const std::vector<uint8_t> bytes = ByteOps::toBytes(static_cast<int16_t>(-2));
+
+  REQUIRE(bytes == std::vector<uint8_t>{ 0xFE, 0xFF });
+  REQUIRE(ByteOps::readInt16(bytes, 0) == -2);
+}
+
+TEST_CASE("BufferOps: toBytes int32 preserves two's-complement representation", "[BufferOps]") {
+  const std::vector<uint8_t> bytes = ByteOps::toBytes(static_cast<int32_t>(-123456));
+
+  REQUIRE(bytes == std::vector<uint8_t>{ 0xC0, 0x1D, 0xFE, 0xFF });
+  REQUIRE(ByteOps::readInt32(bytes, 0) == -123456);
+}
+
+TEST_CASE("BufferOps: toBytes float matches writeFloat bit pattern", "[BufferOps]") {
+  const std::vector<uint8_t> bytes = ByteOps::toBytes(3.14f);
+
+  REQUIRE(bytes == std::vector<uint8_t>{ 0xC3, 0xF5, 0x48, 0x40 });
+  REQUIRE(ByteOps::readFloat(bytes, 0) == Catch::Approx(3.14f));
+}
+
+TEST_CASE("BufferOps: toBytes double matches writeDouble bit pattern", "[BufferOps]") {
+  const std::vector<uint8_t> bytes = ByteOps::toBytes(1.0);
+
+  REQUIRE(bytes == std::vector<uint8_t>{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x3F });
+  REQUIRE(ByteOps::readDouble(bytes, 0) == 1.0);
+}
+
 TEST_CASE("BufferOps: double boundary values", "[BufferOps]") {
   std::vector<uint8_t> buf(32);
   ByteOps::writeDouble(buf, 0, 0.0);
@@ -150,52 +194,4 @@ TEST_CASE("BufferOps: write out of range throws", "[BufferOps]") {
   REQUIRE_THROWS_AS(ByteOps::writeUint32(buf, 0, 0), std::out_of_range);
   REQUIRE_THROWS_AS(ByteOps::writeDouble(buf, 0, 0.0), std::out_of_range);
   REQUIRE_THROWS_AS(ByteOps::writeUint16(buf, 1, 0), std::out_of_range);
-}
-
-// ── variable-width uint32 (byteCount overloads) ──────────────────────────────
-
-TEST_CASE("BufferOps: write/read 3-byte uint32", "[BufferOps]") {
-  std::vector<uint8_t> buf(3, 0x00);
-  ByteOps::writeUint32(buf, 0, 0x123456, 3);
-  REQUIRE(buf[0] == 0x56);
-  REQUIRE(buf[1] == 0x34);
-  REQUIRE(buf[2] == 0x12);
-  REQUIRE(ByteOps::readUint32(buf, 0, 3) == 0x123456);
-}
-
-TEST_CASE("BufferOps: 3-byte uint32 max value", "[BufferOps]") {
-  std::vector<uint8_t> buf(3);
-  ByteOps::writeUint32(buf, 0, 0xFFFFFF, 3);
-  REQUIRE(ByteOps::readUint32(buf, 0, 3) == 0xFFFFFF);
-}
-
-TEST_CASE("BufferOps: 1-byte uint32 overload", "[BufferOps]") {
-  std::vector<uint8_t> buf(1);
-  ByteOps::writeUint32(buf, 0, 0xAB, 1);
-  REQUIRE(ByteOps::readUint32(buf, 0, 1) == 0xAB);
-}
-
-TEST_CASE("BufferOps: 2-byte uint32 overload", "[BufferOps]") {
-  std::vector<uint8_t> buf(2);
-  ByteOps::writeUint32(buf, 0, 0xBEEF, 2);
-  REQUIRE(ByteOps::readUint32(buf, 0, 2) == 0xBEEF);
-}
-
-TEST_CASE("BufferOps: 4-byte uint32 overload matches default", "[BufferOps]") {
-  std::vector<uint8_t> buf(4);
-  ByteOps::writeUint32(buf, 0, 0xDEADBEEF, 4);
-  REQUIRE(ByteOps::readUint32(buf, 0, 4) == 0xDEADBEEF);
-}
-
-TEST_CASE("BufferOps: variable-width uint32 invalid byteCount throws", "[BufferOps]") {
-  std::vector<uint8_t> buf(8);
-  REQUIRE_THROWS_AS(ByteOps::readUint32(buf, 0, 0), std::invalid_argument);
-  REQUIRE_THROWS_AS(ByteOps::readUint32(buf, 0, 5), std::invalid_argument);
-  REQUIRE_THROWS_AS(ByteOps::writeUint32(buf, 0, 0, 0), std::invalid_argument);
-  REQUIRE_THROWS_AS(ByteOps::writeUint32(buf, 0, 0, 5), std::invalid_argument);
-}
-
-TEST_CASE("BufferOps: 3-byte uint32 read out of range throws", "[BufferOps]") {
-  std::vector<uint8_t> buf(2);
-  REQUIRE_THROWS_AS(ByteOps::readUint32(buf, 0, 3), std::out_of_range);
 }

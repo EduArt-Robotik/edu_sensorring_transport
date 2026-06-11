@@ -185,6 +185,48 @@ public:
   static void writeDouble(uint8_t* buffer, size_t length, size_t offset, double value);
   static void writeDouble(std::vector<uint8_t>& buffer, size_t offset, double value);
 
+  /**
+   * @brief Serialize a uint16_t into a new byte vector in little-endian byte order.
+   * @param value  The uint16_t value to serialize.
+   * @return A byte vector containing the serialized value.
+   */
+  static std::vector<uint8_t> toBytes(uint16_t value);
+
+  /**
+   * @brief Serialize a uint32_t into a new byte vector in little-endian byte order.
+   * @param value  The uint32_t value to serialize.
+   * @return A byte vector containing the serialized value.
+   */
+  static std::vector<uint8_t> toBytes(uint32_t value);
+
+  /**
+   * @brief Serialize an int16_t into a new byte vector in little-endian byte order.
+   * @param value  The int16_t value to serialize.
+   * @return A byte vector containing the serialized value.
+   */
+  static std::vector<uint8_t> toBytes(int16_t value);
+
+  /**
+   * @brief Serialize an int32_t into a new byte vector in little-endian byte order.
+   * @param value  The int32_t value to serialize.
+   * @return A byte vector containing the serialized value.
+   */
+  static std::vector<uint8_t> toBytes(int32_t value);
+
+  /**
+   * @brief Serialize an IEEE 754 float (32-bit) into a new byte vector in little-endian byte order.
+   * @param value  The float value to serialize.
+   * @return A byte vector containing the serialized value.
+   */
+  static std::vector<uint8_t> toBytes(float value);
+
+  /**
+   * @brief Serialize an IEEE 754 double (64-bit) into a new byte vector in little-endian byte order.
+   * @param value  The double value to serialize.
+   * @return A byte vector containing the serialized value.
+   */
+  static std::vector<uint8_t> toBytes(double value);
+
 private:
   /**
    * @brief Validate that @p offset + @p size fits within a buffer of @p length bytes.
