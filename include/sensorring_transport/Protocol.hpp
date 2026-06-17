@@ -62,6 +62,14 @@ constexpr std::uint8_t BOOTLOADER_START       = 0x04;
 constexpr std::uint8_t BOOTLOADER_START_ACK   = 0x05;
 constexpr std::uint8_t BOOTLOADER_REQUEST     = 0x06;
 constexpr std::uint8_t BOOTLOADER_RESPONSE    = 0x07;
+
+constexpr std::uint8_t PARAMETER_CANFD_SET_BRS          = 0x10;
+constexpr std::uint8_t PARAMETER_CANFD_SET_DATA_RATE    = 0x11;
+constexpr std::uint8_t PARAMETER_CANFD_SET_SAMPLE_POINT = 0x12;
+
+constexpr std::uint8_t PARAMETER_CANFD_GET_BRS          = PARAMETER_CANFD_SET_BRS | PARAMETER_GETTER_BYTE;
+constexpr std::uint8_t PARAMETER_CANFD_GET_DATA_RATE    = PARAMETER_CANFD_SET_DATA_RATE | PARAMETER_GETTER_BYTE;
+constexpr std::uint8_t PARAMETER_CANFD_GET_SAMPLE_POINT = PARAMETER_CANFD_SET_SAMPLE_POINT | PARAMETER_GETTER_BYTE;
 } // namespace sensor_board
 
 /// VL53L8CX commands
