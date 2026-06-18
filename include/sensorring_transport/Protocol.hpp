@@ -63,9 +63,15 @@ constexpr std::uint8_t BOOTLOADER_START_ACK   = 0x05;
 constexpr std::uint8_t BOOTLOADER_REQUEST     = 0x06;
 constexpr std::uint8_t BOOTLOADER_RESPONSE    = 0x07;
 
-constexpr std::uint8_t PARAMETER_CANFD_SET_BRS          = 0x10;
-constexpr std::uint8_t PARAMETER_CANFD_SET_DATA_RATE    = 0x11;
-constexpr std::uint8_t PARAMETER_CANFD_SET_SAMPLE_POINT = 0x12;
+constexpr std::uint8_t RESET_RX_BUFFER_OVERFLOW_COUNT = 0x10;
+constexpr std::uint8_t RESET_TX_ERROR_COUNT           = 0x11;
+
+constexpr std::uint8_t GET_RX_BUFFER_OVERFLOW_COUNT = RESET_RX_BUFFER_OVERFLOW_COUNT | PARAMETER_GETTER_BYTE;
+constexpr std::uint8_t GET_TX_ERROR_COUNT           = RESET_TX_ERROR_COUNT | PARAMETER_GETTER_BYTE;
+
+constexpr std::uint8_t PARAMETER_CANFD_SET_BRS          = 0x20;
+constexpr std::uint8_t PARAMETER_CANFD_SET_DATA_RATE    = 0x21;
+constexpr std::uint8_t PARAMETER_CANFD_SET_SAMPLE_POINT = 0x22;
 
 constexpr std::uint8_t PARAMETER_CANFD_GET_BRS          = PARAMETER_CANFD_SET_BRS | PARAMETER_GETTER_BYTE;
 constexpr std::uint8_t PARAMETER_CANFD_GET_DATA_RATE    = PARAMETER_CANFD_SET_DATA_RATE | PARAMETER_GETTER_BYTE;
