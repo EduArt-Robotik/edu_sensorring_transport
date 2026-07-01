@@ -76,6 +76,18 @@ constexpr std::uint8_t PARAMETER_CANFD_SET_SAMPLE_POINT = 0x22;
 constexpr std::uint8_t PARAMETER_CANFD_GET_BRS          = PARAMETER_CANFD_SET_BRS | PARAMETER_GETTER_BYTE;
 constexpr std::uint8_t PARAMETER_CANFD_GET_DATA_RATE    = PARAMETER_CANFD_SET_DATA_RATE | PARAMETER_GETTER_BYTE;
 constexpr std::uint8_t PARAMETER_CANFD_GET_SAMPLE_POINT = PARAMETER_CANFD_SET_SAMPLE_POINT | PARAMETER_GETTER_BYTE;
+
+constexpr std::uint8_t PARAMETER_SET_ORIENTATION = 0x30;
+
+constexpr std::uint8_t PARAMETER_GET_ORIENTATION = PARAMETER_SET_ORIENTATION | PARAMETER_GETTER_BYTE;
+
+// Board orientations
+enum class Orientation : std::uint8_t {
+  None  = 1,
+  Left  = 2,
+  Right = 3
+};
+
 } // namespace sensor_board
 
 /// VL53L8CX commands
@@ -99,9 +111,8 @@ constexpr std::uint8_t EEPROM_TRANSMISSION_RESPONSE      = 0x06;
 /// WS2812B commands
 namespace ws2812b {
 constexpr std::uint8_t SYNCHRONIZE           = 0x01;
-constexpr std::uint8_t SET_ORIENTATION       = 0x02;
-constexpr std::uint8_t SET_LED_MODE          = 0x03;
-constexpr std::uint8_t SET_LEDS_INDIVIDUALLY = 0x04;
+constexpr std::uint8_t SET_LED_MODE          = 0x02;
+constexpr std::uint8_t SET_LEDS_INDIVIDUALLY = 0x03;
 
 // WS2812B modes
 enum class Mode : std::uint8_t {
