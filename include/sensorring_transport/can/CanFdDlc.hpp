@@ -56,13 +56,20 @@ constexpr std::uint8_t BYTES_64 = 15U;
  * @return CAN FD DLC code rounded up to the next supported frame size.
  */
 constexpr std::uint8_t bytesToDlcCode(std::size_t bytes) {
-  if (bytes <= 8U)  return static_cast<std::uint8_t>(bytes); // codes 0..8 == byte count
-  if (bytes <= 12U) return dlc::BYTES_12;
-  if (bytes <= 16U) return dlc::BYTES_16;
-  if (bytes <= 20U) return dlc::BYTES_20;
-  if (bytes <= 24U) return dlc::BYTES_24;
-  if (bytes <= 32U) return dlc::BYTES_32;
-  if (bytes <= 48U) return dlc::BYTES_48;
+  if (bytes <= 8U)
+    return static_cast<std::uint8_t>(bytes); // codes 0..8 == byte count
+  if (bytes <= 12U)
+    return dlc::BYTES_12;
+  if (bytes <= 16U)
+    return dlc::BYTES_16;
+  if (bytes <= 20U)
+    return dlc::BYTES_20;
+  if (bytes <= 24U)
+    return dlc::BYTES_24;
+  if (bytes <= 32U)
+    return dlc::BYTES_32;
+  if (bytes <= 48U)
+    return dlc::BYTES_48;
   return dlc::BYTES_64;
 }
 
@@ -76,23 +83,40 @@ constexpr std::uint8_t bytesToDlcCode(std::size_t bytes) {
  */
 constexpr std::size_t dlcCodeToBytes(std::uint8_t dlcCode) {
   switch (dlcCode) {
-    case dlc::BYTES_0:  return 0U;
-    case dlc::BYTES_1:  return 1U;
-    case dlc::BYTES_2:  return 2U;
-    case dlc::BYTES_3:  return 3U;
-    case dlc::BYTES_4:  return 4U;
-    case dlc::BYTES_5:  return 5U;
-    case dlc::BYTES_6:  return 6U;
-    case dlc::BYTES_7:  return 7U;
-    case dlc::BYTES_8:  return 8U;
-    case dlc::BYTES_12: return 12U;
-    case dlc::BYTES_16: return 16U;
-    case dlc::BYTES_20: return 20U;
-    case dlc::BYTES_24: return 24U;
-    case dlc::BYTES_32: return 32U;
-    case dlc::BYTES_48: return 48U;
-    case dlc::BYTES_64: return 64U;
-    default:            return 0U;
+  case dlc::BYTES_0:
+    return 0U;
+  case dlc::BYTES_1:
+    return 1U;
+  case dlc::BYTES_2:
+    return 2U;
+  case dlc::BYTES_3:
+    return 3U;
+  case dlc::BYTES_4:
+    return 4U;
+  case dlc::BYTES_5:
+    return 5U;
+  case dlc::BYTES_6:
+    return 6U;
+  case dlc::BYTES_7:
+    return 7U;
+  case dlc::BYTES_8:
+    return 8U;
+  case dlc::BYTES_12:
+    return 12U;
+  case dlc::BYTES_16:
+    return 16U;
+  case dlc::BYTES_20:
+    return 20U;
+  case dlc::BYTES_24:
+    return 24U;
+  case dlc::BYTES_32:
+    return 32U;
+  case dlc::BYTES_48:
+    return 48U;
+  case dlc::BYTES_64:
+    return 64U;
+  default:
+    return 0U;
   }
 }
 

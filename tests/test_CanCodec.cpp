@@ -2,8 +2,8 @@
 #include <cstdint>
 #include <vector>
 
-#include "sensorring_transport/can/CanCodec.hpp"
 #include "sensorring_transport/Protocol.hpp"
+#include "sensorring_transport/can/CanCodec.hpp"
 using namespace eduart::sensorring::transport::protocol;
 
 using eduart::sensorring::transport::Direction;
@@ -93,7 +93,7 @@ TEST_CASE("CanCodec: encode produces correct CAN frame", "[CanCodec]") {
   frame.command       = 0x03;
   frame.fragmentType  = fragment::SINGLE;
   frame.fragmentCount = 3;
-  frame.data          = {0xAA, 0xBB, 0xCC};
+  frame.data          = { 0xAA, 0xBB, 0xCC };
 
   auto canFrame = CanCodec::encode(frame);
 
@@ -109,11 +109,7 @@ TEST_CASE("CanCodec: encode produces correct CAN frame", "[CanCodec]") {
 
 TEST_CASE("CanCodec: decode recovers TransportFrame", "[CanCodec]") {
   // Raw CAN data: [fragByte, deviceId, command, payload...]
-  std::uint8_t raw[] = {
-      CanCodec::makeFragmentByte(fragment::SINGLE, 2),
-      devbyte::HTPA32,
-      0x01,
-      0xDE, 0xAD};
+  std::uint8_t raw[] = { CanCodec::makeFragmentByte(fragment::SINGLE, 2), devbyte::HTPA32, 0x01, 0xDE, 0xAD };
 
   auto canId = CanCodec::makeCanId(0, 0x03); // input, board 3
 
@@ -138,7 +134,7 @@ TEST_CASE("CanCodec: encode/decode round-trip", "[CanCodec]") {
   original.command       = 0x04;
   original.fragmentType  = fragment::FIRST;
   original.fragmentCount = 3;
-  original.data          = {1, 2, 3, 4, 5};
+  original.data          = { 1, 2, 3, 4, 5 };
 
   auto canFrame = CanCodec::encode(original);
   auto decoded  = CanCodec::decode(canFrame.id, canFrame.data.data(), canFrame.data.size());
